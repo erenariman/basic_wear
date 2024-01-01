@@ -49,8 +49,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.twitter',
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.google',
-    'auth',
-    'store',
+    'basic_wear.apps.auth',
+    'basic_wear.apps.store',
 
 ]
 

@@ -21,6 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('dj_rest_auth.urls')),
     path('api/registration/', include('dj_rest_auth.registration.urls')),
-    path('api/social/', include('auth.urls')),
+    path('api/social/', include('basic_wear.apps.auth.urls')),
 
 ]
