@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'basic_wear.apps.auth',
     'basic_wear.apps.store',
-
 ]
 
 SITE_ID = 1

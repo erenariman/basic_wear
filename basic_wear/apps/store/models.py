@@ -28,20 +28,38 @@ class ShippingAddress(models.Model):
     address = models.TextField(max_length=500)
 
     def __str__(self):
-        return self.customer
+        return self.customer.name
 
 
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    shipping_address = models.OneToOneField(ShippingAddress, on_delete=models.CASCADE)
-    total_price = models.FloatField()
-    is_completed = models.BooleanField(default=False)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True)
+    shipping_address = models.OneToOneField(ShippingAddress, on_delete=models.CASCADE, null=True, blank=True)
+    is_completed = models.BooleanField(default=False, null=True, blank=False)
 
     def __str__(self):
-        return self.customer
+        return self.customer.name
+
+    @property
+    def get_order_total(self):
+        orderitems = self.orderitem_set.all()
+        total = sum([item.get_total() for item in orderitems])
+        return total
+
+    @property
+    def get_order_items(self):
+        orderitems = self.orderitem_set.all()
+        total = sum([item.quantity for item in orderitems])
+        return total
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=False)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+    quantity = models.IntegerField(default=0, null=True)
+
+    def __str__(self):
+        return self.product.name
+
+    def get_total_price(self):
+        total_price = self.product.price * self.quantity
+        return total_price
