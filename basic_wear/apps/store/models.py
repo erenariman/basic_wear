@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     name = models.CharField(max_length=200)
-    address = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
@@ -22,7 +21,7 @@ class Product(models.Model):
 
 
 class ShippingAddress(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, related_name='shipping_addresses')
     city = models.CharField(max_length=50)
     district = models.CharField(max_length=50)
     address = models.TextField(max_length=500)
@@ -32,7 +31,7 @@ class ShippingAddress(models.Model):
 
 
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True, related_name='orders')
     shipping_address = models.OneToOneField(ShippingAddress, on_delete=models.CASCADE, null=True, blank=True)
     is_completed = models.BooleanField(default=False, null=True, blank=False)
 
@@ -53,8 +52,8 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=False)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=False, related_name='order_items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=False, related_name='product')
     quantity = models.IntegerField(default=0, null=True)
 
     def __str__(self):

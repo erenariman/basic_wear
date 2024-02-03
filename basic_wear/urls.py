@@ -23,5 +23,4 @@ urlpatterns = [
     path('api/registration/', include('dj_rest_auth.registration.urls')),
     path('api/social/', include('basic_wear.apps.auth.urls')),
     path('api/store/', include('basic_wear.apps.store.urls')),
-
 ]

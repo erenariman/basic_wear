@@ -1,28 +1,32 @@
-from rest_framework.serializers import ModelSerializer
-
-from basic_wear.apps.store.models import Customer, Product, Order, OrderItem
-
-
-class CustomerSerializer(ModelSerializer):
-    class Meta:
-        model = Customer
-        fields = '__all__'
+from rest_framework import serializers
+from basic_wear.apps.store.models import Customer, Product, Order, OrderItem, ShippingAddress
 
 
-class ProductSerializer(ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
 
 
-class OrderSerializer(ModelSerializer):
+class ShippingAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShippingAddress
+        fields = '__all__'
+
+
+class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
 
 
-class OrderItemSerializer(ModelSerializer):
+class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = '__all__'
 
+
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = '__all__'
