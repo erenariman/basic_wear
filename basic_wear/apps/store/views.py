@@ -1,8 +1,8 @@
-from .models import Customer, Product, Order, OrderItem, ShippingAddress
+from .models import Customer, Product, Order, OrderItem, ShippingAddress, Cart, CartItem
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from .serializers import CustomerSerializer, ProductSerializer, OrderItemSerializer, OrderSerializer, \
-    ShippingAddressSerializer
+    ShippingAddressSerializer, CartSerializer, CartItemSerializer
 
 
 class CustomerViewSet(ModelViewSet):
@@ -32,4 +32,16 @@ class OrderItemViewSet(ModelViewSet):
 class ShippingAddressViewSet(ModelViewSet):
     queryset = ShippingAddress.objects.all()
     serializer_class = ShippingAddressSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class CartViewSet(ModelViewSet):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class CartItemViewSet(ModelViewSet):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
     permission_classes = [IsAuthenticated]

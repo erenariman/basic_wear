@@ -30,6 +30,25 @@ class ShippingAddress(models.Model):
         return self.customer.name
 
 
+class Cart(models.Model):
+    customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
+    total_price = models.FloatField()
+
+    def __str__(self):
+        return self.customer
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items')
+    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    price = models.FloatField()
+
+    @property
+    def get_total_price(self):
+        return self.product.price * self.quantity
+
+
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True, related_name='orders')
     shipping_address = models.OneToOneField(ShippingAddress, on_delete=models.CASCADE, null=True, blank=True)

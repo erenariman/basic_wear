@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from basic_wear.apps.store.models import Customer, Product, Order, OrderItem, ShippingAddress
+from basic_wear.apps.store.models import Customer, Product, Order, OrderItem, ShippingAddress, Cart, CartItem
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -12,6 +12,20 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShippingAddress
         fields = '__all__'
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = '__all__'
+
+
+class CartSerializer(serializers.ModelSerializer):
+    cart_items = CartItemSerializer()
+
+    class Meta:
+        model = Cart
+        fields = ['cart_items', 'total_price', 'cart_items']
 
 
 class OrderSerializer(serializers.ModelSerializer):
