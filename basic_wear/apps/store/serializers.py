@@ -21,11 +21,11 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
-    cart_items = CartItemSerializer()
+    cart_items = CartItemSerializer(many=True, read_only=True)
 
     class Meta:
         model = Cart
-        fields = ['cart_items', 'total_price', 'cart_items']
+        fields = ['customer', 'cart_items']
 
 
 class OrderSerializer(serializers.ModelSerializer):
