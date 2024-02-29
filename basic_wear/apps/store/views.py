@@ -1,5 +1,7 @@
 from .models import Customer, Product, Order, OrderItem, ShippingAddress, Cart, CartItem
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.mixins import (ListModelMixin, RetrieveModelMixin, UpdateModelMixin, CreateModelMixin,
+                                   DestroyModelMixin)
 from rest_framework.permissions import IsAuthenticated
 from .serializers import CustomerSerializer, ProductSerializer, OrderItemSerializer, OrderSerializer, \
     ShippingAddressSerializer, CartSerializer, CartItemSerializer
@@ -18,9 +20,11 @@ class ProductViewSet(ModelViewSet):
 
 
 class OrderViewSet(ModelViewSet):
-    queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Order.objects.filter(customer=self.request.user.customer)
 
 
 class OrderItemViewSet(ModelViewSet):
@@ -35,13 +39,25 @@ class ShippingAddressViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class CartViewSet(ModelViewSet):
-    queryset = Cart.objects.all()
+class CartViewSet(CreateModelMixin,
+                  UpdateModelMixin,
+                  RetrieveModelMixin,
+                  DestroyModelMixin,
+                  GenericViewSet):
     serializer_class = CartSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_object(self):
+        return Cart.objects.get(customer=self.request.user.customer)
 
-class CartItemViewSet(ModelViewSet):
-    queryset = CartItem.objects.all()
+
+class CartItemViewSet(CreateModelMixin,
+                      UpdateModelMixin,
+                      ListModelMixin,
+                      DestroyModelMixin,
+                      GenericViewSet):
     serializer_class = CartItemSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return CartItem.objects.filter(cart=self.request.user.customer.cart)
