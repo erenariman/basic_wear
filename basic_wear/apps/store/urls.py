@@ -1,5 +1,6 @@
 from django.urls import path
 from rest_framework import routers
+from django.conf.urls.static import static
 
 from .views import CustomerViewSet, ProductViewSet, OrderItemViewSet, OrderViewSet, ShippingAddressViewSet, CartViewSet, \
     CartItemViewSet

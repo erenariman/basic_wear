@@ -2,7 +2,7 @@ from .models import Customer, Product, Order, OrderItem, ShippingAddress, Cart, 
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import (ListModelMixin, RetrieveModelMixin, UpdateModelMixin, CreateModelMixin,
                                    DestroyModelMixin)
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import CustomerSerializer, ProductSerializer, OrderItemSerializer, OrderSerializer, \
     ShippingAddressSerializer, CartSerializer, CartItemSerializer
 
@@ -16,7 +16,7 @@ class CustomerViewSet(ModelViewSet):
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 
 class OrderViewSet(ModelViewSet):
