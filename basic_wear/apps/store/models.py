@@ -22,7 +22,7 @@ class Product(models.Model):
 
 
 class ShippingAddress(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, related_name='shipping_addresses')
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, related_name='addresses')
     city = models.CharField(max_length=50)
     district = models.CharField(max_length=50)
     address = models.TextField(max_length=500)

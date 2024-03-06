@@ -1,3 +1,4 @@
+from rest_framework import exceptions
 from .models import Customer, Product, Order, OrderItem, ShippingAddress, Cart, CartItem
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import (ListModelMixin, RetrieveModelMixin, UpdateModelMixin, CreateModelMixin,
@@ -7,10 +8,24 @@ from .serializers import CustomerSerializer, ProductSerializer, OrderItemSeriali
     ShippingAddressSerializer, CartSerializer, CartItemSerializer
 
 
-class CustomerViewSet(ModelViewSet):
-    queryset = Customer.objects.all()
+class CustomerViewSet(CreateModelMixin,
+                      UpdateModelMixin,
+                      RetrieveModelMixin,
+                      DestroyModelMixin,
+                      GenericViewSet):
     serializer_class = CustomerSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        if self.request.user.is_authenticated:
+            try:
+                return Customer.objects.get(user=self.request.user)
+            except Customer.DoesNotExist:
+                # If Customer object doesn't exist for the authenticated user
+                raise exceptions.NotFound("Customer not found.")
+        else:
+            # Handle case where user is not authenticated
+            raise exceptions.NotAuthenticated("User is not authenticated.")
 
 
 class ProductViewSet(ModelViewSet):
@@ -21,7 +36,7 @@ class ProductViewSet(ModelViewSet):
 
 class OrderViewSet(ModelViewSet):
     serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         return Order.objects.filter(customer=self.request.user.customer)
@@ -30,13 +45,15 @@ class OrderViewSet(ModelViewSet):
 class OrderItemViewSet(ModelViewSet):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 
 class ShippingAddressViewSet(ModelViewSet):
-    queryset = ShippingAddress.objects.all()
     serializer_class = ShippingAddressSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return ShippingAddress.objects.filter(customer=self.request.user.customer)
 
 
 class CartViewSet(CreateModelMixin,
@@ -45,7 +62,7 @@ class CartViewSet(CreateModelMixin,
                   DestroyModelMixin,
                   GenericViewSet):
     serializer_class = CartSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_object(self):
         return Cart.objects.get(customer=self.request.user.customer)
@@ -57,7 +74,7 @@ class CartItemViewSet(CreateModelMixin,
                       DestroyModelMixin,
                       GenericViewSet):
     serializer_class = CartItemSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         return CartItem.objects.filter(cart=self.request.user.customer.cart)

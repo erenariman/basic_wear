@@ -41,6 +41,9 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 class CustomerSerializer(serializers.ModelSerializer):
+    addresses = ShippingAddressSerializer(many=True, read_only=True)
+    orders = OrderSerializer(many=True, read_only=True)
+
     class Meta:
         model = Customer
-        fields = '__all__'
+        fields = ['user', 'name', 'orders', 'addresses']
